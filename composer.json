@@ -1,14 +1,13 @@
 {
-    "name": "oncletom/wp-less",
+    "name": "kuus/wp-scss",
     "require": {
-        "oyejorge/less.php": "1.7",
-        "leafo/lessphp": "0.4.0"
+        "leafo/scssphp": "0.1.1"
     },
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "oncletom",
-            "email": "hi@oncletom.io"
+            "name": "kuus",
+            "email": "kunderikuus@gmail.com"
         }
     ]
 }
