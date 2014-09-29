@@ -3,10 +3,10 @@
  * Stylesheet management
  *
  * @author oncletom
- * @package wp-less
+ * @package wp-scss
  * @subpackage lib
  */
-class WPLessStylesheet
+class WPScssStylesheet
 {
   protected $compiler,
             $stylesheet;
@@ -28,7 +28,7 @@ class WPLessStylesheet
    * @author oncletom
    * @since 1.0
    * @version 1.1
-   * @throws WPLessException if something is not properly configured
+   * @throws WPScssException if something is not properly configured
    * @param _WP_Dependency $stylesheet
    * @param array $variables
    */
@@ -38,7 +38,7 @@ class WPLessStylesheet
 
     if (!self::$upload_dir || !self::$upload_uri)
     {
-      throw new WPLessException('You must configure `upload_dir` and `upload_uri` static attributes before constructing this object.');
+      throw new WPScssException('You must configure `upload_dir` and `upload_uri` static attributes before constructing this object.');
     }
 
     $this->stylesheet->ver = null;
@@ -50,7 +50,7 @@ class WPLessStylesheet
       $this->is_new = false;
     }
 
-    do_action('wp-less_stylesheet_construct', $this);
+    do_action('wp-scss_stylesheet_construct', $this);
   }
 
   /**
@@ -64,11 +64,11 @@ class WPLessStylesheet
   public function computeTargetPath()
   {
     $target_path = preg_replace('#^'.get_theme_root_uri().'#U', '', $this->stylesheet->src);
-    $target_path = preg_replace('/.less$/U', '', $target_path);
+    $target_path = preg_replace('/.scss$/U', '', $target_path);
 
     $target_path .= '-%s.css';
 
-    return apply_filters('wp-less_stylesheet_compute_target_path', $target_path);
+    return apply_filters('wp-scss_stylesheet_compute_target_path', $target_path);
   }
 
   /**
@@ -118,7 +118,7 @@ class WPLessStylesheet
    */
   public function getSourceContent()
   {
-    return apply_filters('wp-less_stylesheet_source_content', file_get_contents($this->source_path));
+    return apply_filters('wp-scss_stylesheet_source_content', file_get_contents($this->source_path));
   }
 
   /**
@@ -192,7 +192,7 @@ class WPLessStylesheet
    * Save the current stylesheet as a parsed css file
    *
    * @deprecated
-   * @see WPLessCompiler::saveStylesheet()
+   * @see WPScssCompiler::saveStylesheet()
    */
   public function save()
   {

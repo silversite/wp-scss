@@ -1,6 +1,6 @@
 <?php
 
-class WPLessGarbagecollector
+class WPScssGarbagecollector
 {
     /**
      * @static
@@ -10,11 +10,11 @@ class WPLessGarbagecollector
 
     /**
      * @protected
-     * @var WPLessConfiguration
+     * @var WPScssConfiguration
      */
     protected $configuration;
 
-	public function __construct(WPLessConfiguration $configuration)
+	public function __construct(WPScssConfiguration $configuration)
 	{
 		$this->configuration = $configuration;
 	}

@@ -3,10 +3,10 @@
  * Basic Exception
  *
  * @author oncletom
- * @package wp-less
+ * @package wp-scss
  * @subpackage lib
  */
-class WPLessException extends Exception
+class WPScssException extends Exception
 {
   /**
    * Override the display output of the exception for WordPress
@@ -16,6 +16,6 @@ class WPLessException extends Exception
    */
   public function __toString()
   {
-    wp_die($this->getMessage().'<br /><pre>'.$this->getTraceAsString().'</pre>', 'WP-LESS exception');
+    wp_die($this->getMessage().'<br /><pre>'.$this->getTraceAsString().'</pre>', 'WP-SCSS exception');
   }
 }

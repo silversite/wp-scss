@@ -1,6 +1,6 @@
-# `wp-less` Contributors
+# `wp-scss` Contributors
 
-These people have contributed code to improve the quality and features of the WordPress plugin.  
+These people have contributed code to improve the quality and features of the WordPress plugin.
 They are listed in an alphabetical order.
 
 * [Drew Geraets](https://github.com/drewgeraets)

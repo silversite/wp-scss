@@ -1,27 +1,27 @@
 <?php
 /**
- * LESS compiler
+ * SCSS compiler
  *
  * @author oncletom
- * @extends lessc
- * @package wp-less
+ * @extends scssc
+ * @package wp-scss
  * @subpackage lib
  * @since 1.2
  * @version 1.3
  */
-class WPLessCompiler extends lessc
+class WPScssCompiler extends scssc
 {
 	/**
 	 * Instantiate a compiler
 	 *
    	 * @api
-	 * @see	lessc::__construct
+	 * @see	scssc::__construct
 	 * @param $file	string [optional]	Additional file to parse
 	 */
 	public function __construct($file = null)
 	{
-  		do_action('wp-less_compiler_construct_pre', $this, $file);
-		parent::__construct(apply_filters('wp-less_compiler_construct', $file));
+  		do_action('wp-scss_compiler_construct_pre', $this, $file);
+		parent::__construct(apply_filters('wp-scss_compiler_construct', $file));
 	}
 
 	/**
@@ -59,15 +59,15 @@ class WPLessCompiler extends lessc
 	}
 
 	/**
-	 * Smart caching and retrieval of a tree of @import LESS stylesheets
+	 * Smart caching and retrieval of a tree of @import SCSS stylesheets
 	 *
 	 * @since 1.5
-	 * @param WPLessStylesheet $stylesheet
+	 * @param WPScssStylesheet $stylesheet
 	 * @param bool $force
 	 */
-	public function cacheStylesheet(WPLessStylesheet $stylesheet, $force = false)
+	public function cacheStylesheet(WPScssStylesheet $stylesheet, $force = false)
 	{
-		$cache_name = 'wp_less_compiled_'.md5($stylesheet->getSourcePath());
+		$cache_name = 'wp_scss_compiled_'.md5($stylesheet->getSourcePath());
 		$compiled_cache = get_transient($cache_name);
 
 		if( !$force && !file_exists( $stylesheet->getTargetPath() ) ) $force = true;
@@ -86,32 +86,32 @@ class WPLessCompiler extends lessc
 	}
 
 	/**
-	 * Process a WPLessStylesheet
+	 * Process a WPScssStylesheet
 	 *
-	 * This logic was previously held in WPLessStylesheet::save()
+	 * This logic was previously held in WPScssStylesheet::save()
 	 *
 	 * @since 1.4.2
-	 * @param WPLessStylesheet $stylesheet
+	 * @param WPScssStylesheet $stylesheet
 	 * @param null $css
 	 */
-	public function saveStylesheet(WPLessStylesheet $stylesheet, $css = null)
+	public function saveStylesheet(WPScssStylesheet $stylesheet, $css = null)
 	{
 		wp_mkdir_p(dirname($stylesheet->getTargetPath()));
 
 		try
 		{
-			do_action('wp-less_stylesheet_save_pre', $stylesheet, $this->getVariables());
+			do_action('wp-scss_stylesheet_save_pre', $stylesheet, $this->getVariables());
 
 			if ($css === null)
 			{
 				$css = $this->compileFile($stylesheet->getSourcePath());
 			}
 
-			file_put_contents($stylesheet->getTargetPath(), apply_filters('wp-less_stylesheet_save', $css, $stylesheet));
+			file_put_contents($stylesheet->getTargetPath(), apply_filters('wp-scss_stylesheet_save', $css, $stylesheet));
 			chmod($stylesheet->getTargetPath(), 0666);
 
 			$stylesheet->save();
-			do_action('wp-less_stylesheet_save_post', $stylesheet);
+			do_action('wp-scss_stylesheet_save_post', $stylesheet);
 		}
 		catch(Exception $e)
 		{

@@ -4,13 +4,13 @@ if (!class_exists('WPPluginToolkitPlugin')) {
 }
 
 /**
- * WP LESS Plugin class
+ * WP SCSS Plugin class
  *
  * @author oncletom
- * @package wp-less
+ * @package wp-scss
  * @subpackage lib
  */
-class WPLessPlugin extends WPPluginToolkitPlugin
+class WPScssPlugin extends WPPluginToolkitPlugin
 {
     /**
      * @protected
@@ -26,7 +26,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
 
     /**
      * @protected
-     * @var null|WPLessCompiler
+     * @var null|WPScssCompiler
      */
     protected $compiler = null;
 
@@ -34,49 +34,49 @@ class WPLessPlugin extends WPPluginToolkitPlugin
      * @static
      * @var Pattern used to match stylesheet files to process them as pure CSS
      */
-    public static $match_pattern = '/\.less$/U';
+    public static $match_pattern = '/\.scss$/U';
 
-    public function __construct(WPLessConfiguration $configuration)
+    public function __construct(WPScssConfiguration $configuration)
     {
         parent::__construct($configuration);
     }
-    
+
     public function instantiateCompiler()
     {
-        if (!class_exists('lessc')) {
+        if (!class_exists('scssc')) {
             // Load the parent compiler class
-            require $this->getLessCompilerPath();
+            require $this->getScssCompilerPath();
         }
-        
-        $this->compiler = new WPLessCompiler;
+
+        $this->compiler = new WPScssCompiler;
         $this->compiler->setVariable('stylesheet_directory_uri', "'" . get_stylesheet_directory_uri() . "'");
         $this->compiler->setVariable('template_directory_uri', "'" . get_template_directory_uri() . "'");
     }
-    
+
     /**
-     * Load the parent compiler class. This is provided via lessc.inc.php for
-     * both the lessphp and less.php implementations
+     * Load the parent compiler class. This is provided via scssc.inc.php for
+     * both the scssphp and scss.php implementations
      *
      * @author  fabrizim
      * @since   1.7.1
      *
      */
-    protected function getLessCompilerPath()
+    protected function getScssCompilerPath()
     {
-        // The usage of the WP_LESS_COMPILER is a holdover from an older implentation
+        // The usage of the WP_SCSS_COMPILER is a holdover from an older implentation
         // of this opt-in functionality
-        $compiler = defined('WP_LESS_COMPILER') ? WP_LESS_COMPILER : apply_filters('wp_less_compiler', 'lessphp');
-        
+        $compiler = defined('WP_SCSS_COMPILER') ? WP_SCSS_COMPILER : apply_filters('wp_scss_compiler', 'scssphp');
+
         switch( $compiler ){
-            case 'less.php':
-                return dirname(__FILE__).'/../vendor/oyejorge/less.php/lessc.inc.php';
-            case 'lessphp':
-                return dirname(__FILE__).'/../vendor/leafo/lessphp/lessc.inc.php';
+            case 'scss.php':
+                return dirname(__FILE__).'/../vendor/oyejorge/scss.php/scssc.inc.php';
+            case 'scssphp':
+                return dirname(__FILE__).'/../vendor/leafo/scssphp/scssc.inc.php';
             default:
                 return $compiler;
         }
     }
-    
+
     public function getCompiler()
     {
         if( $this->compiler ) return $this->compiler;
@@ -99,8 +99,8 @@ class WPLessPlugin extends WPPluginToolkitPlugin
         /*
          * Garbage Collection Registration
          */
-        $gc = new WPLessGarbagecollector($this->configuration);
-        add_action('wp-less-garbage-collection', array($gc, 'clean'));
+        $gc = new WPScssGarbagecollector($this->configuration);
+        add_action('wp-scss-garbage-collection', array($gc, 'clean'));
 
         /*
          * Last Hooks
@@ -119,16 +119,16 @@ class WPLessPlugin extends WPPluginToolkitPlugin
          * Check to see if it isn't scheduled first, for example
          * this would occur when loaded via theme
          */
-        if ( FALSE === wp_get_schedule( 'wp-less-garbage-collection' ) )
+        if ( FALSE === wp_get_schedule( 'wp-scss-garbage-collection' ) )
         {
-            wp_schedule_event(time(), 'daily', 'wp-less-garbage-collection');
+            wp_schedule_event(time(), 'daily', 'wp-scss-garbage-collection');
         }
 
-        /* 
+        /*
          * Clear old hooks, prior to hook change
          * #57
          */
-        wp_clear_scheduled_hook( 'wp-less_garbage_collection' );
+        wp_clear_scheduled_hook( 'wp-scss_garbage_collection' );
     }
 
     /**
@@ -138,7 +138,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
      */
     public function uninstall()
     {
-        wp_clear_scheduled_hook('wp-less-garbage-collection');
+        wp_clear_scheduled_hook('wp-scss-garbage-collection');
     }
 
     /**
@@ -150,10 +150,10 @@ class WPLessPlugin extends WPPluginToolkitPlugin
      * @since 1.2
      * @version 1.2
      * @param string $css parsed CSS
-     * @param WPLessStylesheet Stylesheet currently processed
+     * @param WPScssStylesheet Stylesheet currently processed
      * @return string parsed and fixed CSS
      */
-    public function filterStylesheetUri($css, WPLessStylesheet $stylesheet)
+    public function filterStylesheetUri($css, WPScssStylesheet $stylesheet)
     {
         $this->_TmpBaseDir = dirname($stylesheet->getSourceUri());
 
@@ -204,7 +204,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
             }
         }
 
-        return apply_filters('wp-less_get_queued_styles_to_process', $to_process);
+        return apply_filters('wp-scss_get_queued_styles_to_process', $to_process);
     }
 
     /**
@@ -233,14 +233,14 @@ class WPLessPlugin extends WPPluginToolkitPlugin
      * @version 1.3
      * @param string $handle
      * @param $force boolean If set to true, rebuild all stylesheets, without considering they are updated or not
-     * @return WPLessStylesheet
+     * @return WPScssStylesheet
      */
     public function processStylesheet($handle, $force = false)
     {
         $force = !!$force ? $force : $this->configuration->alwaysRecompile();
 
         $wp_styles = $this->getStyles();
-        $stylesheet = new WPLessStylesheet($wp_styles->registered[$handle], $this->getCompiler()->getVariables());
+        $stylesheet = new WPScssStylesheet($wp_styles->registered[$handle], $this->getCompiler()->getVariables());
 
         if ($this->configuration->getCompilationStrategy() === 'legacy' && $stylesheet->hasToCompile()) {
             $this->getCompiler()->saveStylesheet($stylesheet);
@@ -266,22 +266,22 @@ class WPLessPlugin extends WPPluginToolkitPlugin
         $styles = $this->getQueuedStylesToProcess();
         $force = is_bool($force) && $force ? !!$force : false;
 
-        WPLessStylesheet::$upload_dir = $this->configuration->getUploadDir();
-        WPLessStylesheet::$upload_uri = $this->configuration->getUploadUrl();
+        WPScssStylesheet::$upload_dir = $this->configuration->getUploadDir();
+        WPScssStylesheet::$upload_uri = $this->configuration->getUploadUrl();
 
         if (empty($styles)) {
             return;
         }
 
-        if (!wp_mkdir_p(WPLessStylesheet::$upload_dir)) {
-            throw new WPLessException(sprintf('The upload dir folder (`%s`) is not writable from %s.', WPLessStylesheet::$upload_dir, get_class($this)));
+        if (!wp_mkdir_p(WPScssStylesheet::$upload_dir)) {
+            throw new WPScssException(sprintf('The upload dir folder (`%s`) is not writable from %s.', WPScssStylesheet::$upload_dir, get_class($this)));
         }
 
         foreach ($styles as $style_id) {
             $this->processStylesheet($style_id, $force);
         }
 
-        do_action('wp-less_plugin_process_stylesheets', $styles);
+        do_action('wp-scss_plugin_process_stylesheets', $styles);
     }
 
     /**
@@ -298,9 +298,9 @@ class WPLessPlugin extends WPPluginToolkitPlugin
             return false;
         }
 
-        is_admin() ? do_action('wp-less_init_admin', $this) : do_action('wp-less_init', $this);
+        is_admin() ? do_action('wp-scss_init_admin', $this) : do_action('wp-scss_init', $this);
         add_action('wp_enqueue_scripts', array($this, 'processStylesheets'), 999, 0);
-        add_filter('wp-less_stylesheet_save', array($this, 'filterStylesheetUri'), 10, 2);
+        add_filter('wp-scss_stylesheet_save', array($this, 'filterStylesheetUri'), 10, 2);
 
         return $this->is_hooks_registered = true;
     }
@@ -308,7 +308,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see http://leafo.net/lessphp/docs/#setting_variables_from_php
+     * @see http://leafo.net/scssphp/docs/#setting_variables_from_php
      * @since 1.4
      */
     public function addVariable($name, $value)
@@ -319,7 +319,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see http://leafo.net/lessphp/docs/#setting_variables_from_php
+     * @see http://leafo.net/scssphp/docs/#setting_variables_from_php
      * @since 1.4
      */
     public function setVariables(array $variables)
@@ -330,7 +330,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see http://leafo.net/lessphp/docs/#custom_functions
+     * @see http://leafo.net/scssphp/docs/#custom_functions
      * @since 1.4.2
      */
     public function registerFunction($name, $callback)
@@ -341,7 +341,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see lessc::unregisterFunction()
+     * @see scssc::unregisterFunction()
      * @since 1.4.2
      */
     public function unregisterFunction($name)
@@ -352,7 +352,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see WPLessCompiler::getImportDir()
+     * @see WPScssCompiler::getImportDir()
      * @return array
      * @since 1.5.0
      */
@@ -364,7 +364,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see lessc::addImportDir()
+     * @see scssc::addImportDir()
      * @param string $dir
      * @since 1.5.0
      */
@@ -376,7 +376,7 @@ class WPLessPlugin extends WPPluginToolkitPlugin
     /**
      * Proxy method
      *
-     * @see lessc::setImportDir()
+     * @see scssc::setImportDir()
      * @param array $dirs
      * @since 1.5.0
      */

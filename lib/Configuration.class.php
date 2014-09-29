@@ -1,11 +1,11 @@
 <?php
 
-class WPLessConfiguration extends WPPluginToolkitConfiguration
+class WPScssConfiguration extends WPPluginToolkitConfiguration
 {
   /**
    * Refers to the name of the plugin
    */
-  const UNIX_NAME = 'wp-less';
+  const UNIX_NAME = 'wp-scss';
 
   /**
    * Refers to the version of the plugin
@@ -46,13 +46,13 @@ class WPLessConfiguration extends WPPluginToolkitConfiguration
 
   protected function configureOptions()
   {
-	  if (defined('WP_LESS_COMPILATION') && WP_LESS_COMPILATION)
+	  if (defined('WP_SCSS_COMPILATION') && WP_SCSS_COMPILATION)
 	  {
-		  $this->setCompilationStrategy(WP_LESS_COMPILATION);
+		  $this->setCompilationStrategy(WP_SCSS_COMPILATION);
 	  }
 
 	  //previous setting can be overridden for special reasons (dev/prod for example)
-	  if ((defined('WP_DEBUG') && WP_DEBUG) || (defined('WP_LESS_ALWAYS_RECOMPILE') && WP_LESS_ALWAYS_RECOMPILE))
+	  if ((defined('WP_DEBUG') && WP_DEBUG) || (defined('WP_SCSS_ALWAYS_RECOMPILE') && WP_SCSS_ALWAYS_RECOMPILE))
 	  {
 		  $this->setCompilationStrategy('always');
 	  }
@@ -92,7 +92,7 @@ class WPLessConfiguration extends WPPluginToolkitConfiguration
 	{
 		if (!in_array($strategy, $this->compilation_strategies))
 		{
-			throw new WPLessException('Unknown compile strategy: ['.$strategy.'] provided.');
+			throw new WPScssException('Unknown compile strategy: ['.$strategy.'] provided.');
 		}
 
 		$this->compilation_strategy = $strategy;

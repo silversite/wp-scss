@@ -1,7 +1,7 @@
 <?php
 /**
  * Creates easily a variable to be replaced on compilation
- * 
+ *
  * @author oncletom
  * @since 1.4
  * @version 1.0
@@ -9,14 +9,14 @@
  * @param string $value
  * @return null
  */
-function less_add_variable($name, $value)
+function scss_add_variable($name, $value)
 {
-  WPPluginToolkitPlugin::getInstance('WPLess')->addVariable($name, $value);
+  WPPluginToolkitPlugin::getInstance('WPScss')->addVariable($name, $value);
 }
 
 /**
- * Creates easily a LESS function to be replaced on compilation
- * 
+ * Creates easily a SCSS function to be replaced on compilation
+ *
  * @author oncletom
  * @since 1.4.2
  * @version 1.0
@@ -24,21 +24,21 @@ function less_add_variable($name, $value)
  * @param string $callback
  * @return null
  */
-function less_register_function($name, $callback)
+function scss_register_function($name, $callback)
 {
-  WPPluginToolkitPlugin::getInstance('WPLess')->registerFunction($name, $callback);
+  WPPluginToolkitPlugin::getInstance('WPScss')->registerFunction($name, $callback);
 }
 
 /**
- * LESSify a stylesheet on the fly
- * 
+ * SCSSify a stylesheet on the fly
+ *
  * <pre>
  * <head>
  *  <title><?php wp_title() ?></title>
- *  <link rel="stylesheet" media="all" type="text/css" href="<?php echo wp_lessify(get_bloginfo('template_dir').'/myfile.less') ?>" />
+ *  <link rel="stylesheet" media="all" type="text/css" href="<?php echo wp_scssify(get_bloginfo('template_dir').'/myfile.scss') ?>" />
  * </head>
  * </pre>
- * 
+ *
  * @todo hook on WordPress cache system
  * @author oncletom
  * @since 1.2
@@ -48,19 +48,19 @@ function less_register_function($name, $callback)
  * @param string $version_prefix
  * @return string processed URI
  */
-function wp_lessify($stylesheet_uri, $cache_key = null, $version_prefix = '?ver=')
+function wp_scssify($stylesheet_uri, $cache_key = null, $version_prefix = '?ver=')
 {
-  static $wp_less_uri_cache;
-  $cache_key = 'wp-less-'.($cache_key === '' ? md5($stylesheet_uri) : $cache_key);
+  static $wp_scss_uri_cache;
+  $cache_key = 'wp-scss-'.($cache_key === '' ? md5($stylesheet_uri) : $cache_key);
 
-  if (is_null($wp_less_uri_cache))
+  if (is_null($wp_scss_uri_cache))
   {
-    $wp_less_uri_cache = array();
+    $wp_scss_uri_cache = array();
   }
 
-  if (isset($wp_less_uri_cache[$cache_key]))
+  if (isset($wp_scss_uri_cache[$cache_key]))
   {
-    return $wp_less_uri_cache[$cache_key];
+    return $wp_scss_uri_cache[$cache_key];
   }
 
   /*
@@ -68,11 +68,11 @@ function wp_lessify($stylesheet_uri, $cache_key = null, $version_prefix = '?ver=
    * It relies on a _WP_Dependency object
    */
   wp_register_style($cache_key, $stylesheet_uri);
-  $stylesheet = WPLessPlugin::getInstance()->processStylesheet($cache_key);
+  $stylesheet = WPScssPlugin::getInstance()->processStylesheet($cache_key);
   wp_deregister_style($cache_key);
-  $wp_less_uri_cache[$cache_key] = $stylesheet->getTargetUri();
+  $wp_scss_uri_cache[$cache_key] = $stylesheet->getTargetUri();
 
   unset($stylesheet);
-  return $wp_less_uri_cache[$cache_key];
+  return $wp_scss_uri_cache[$cache_key];
 }
 
