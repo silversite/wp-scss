@@ -242,11 +242,13 @@ class WPScssPlugin extends WPPluginToolkitPlugin
         $wp_styles = $this->getStyles();
         $stylesheet = new WPScssStylesheet($wp_styles->registered[$handle], $this->getCompiler()->getVariables());
 
-        if ($this->configuration->getCompilationStrategy() === 'legacy' && $stylesheet->hasToCompile()) {
+        // TODO: just disabled for now
+        // if ($this->configuration->getCompilationStrategy() === 'legacy' && $stylesheet->hasToCompile()) {
             $this->getCompiler()->saveStylesheet($stylesheet);
-        } elseif ($this->configuration->getCompilationStrategy() !== 'legacy') {
-            $this->getCompiler()->cacheStylesheet($stylesheet, $force);
-        }
+        // }
+        // elseif ($this->configuration->getCompilationStrategy() !== 'legacy') {
+        //     $this->getCompiler()->cacheStylesheet($stylesheet, $force);
+        // }
 
         $wp_styles->registered[$handle]->src = $stylesheet->getTargetUri();
 

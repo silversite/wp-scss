@@ -9,7 +9,7 @@
  * @since 1.2
  * @version 1.3
  */
-class WPScssCompiler extends scssc
+class WPScssCompiler extends \Leafo\ScssPhp\Compiler
 {
 	/**
 	 * Instantiate a compiler
@@ -20,8 +20,7 @@ class WPScssCompiler extends scssc
 	 */
 	public function __construct($file = null)
 	{
-  		do_action('wp-scss_compiler_construct_pre', $this, $file);
-		parent::__construct(apply_filters('wp-scss_compiler_construct', $file));
+  	do_action('wp-scss_compiler_construct_pre', $this, $file);
 	}
 
 	/**
@@ -104,7 +103,7 @@ class WPScssCompiler extends scssc
 
 			if ($css === null)
 			{
-				$css = $this->compileFile($stylesheet->getSourcePath());
+				$css = $this->compile(file_get_contents($stylesheet->getSourcePath()));
 			}
 
 			file_put_contents($stylesheet->getTargetPath(), apply_filters('wp-scss_stylesheet_save', $css, $stylesheet));
