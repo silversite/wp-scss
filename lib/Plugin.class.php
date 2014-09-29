@@ -68,10 +68,10 @@ class WPScssPlugin extends WPPluginToolkitPlugin
         $compiler = defined('WP_SCSS_COMPILER') ? WP_SCSS_COMPILER : apply_filters('wp_scss_compiler', 'scssphp');
 
         switch( $compiler ){
-            case 'scss.php':
-                return dirname(__FILE__).'/../vendor/oyejorge/scss.php/scssc.inc.php';
+            // case 'scss.php':
+            //     return dirname(__FILE__).'/../vendor/oyejorge/scss.php/scss.inc.php';
             case 'scssphp':
-                return dirname(__FILE__).'/../vendor/leafo/scssphp/scssc.inc.php';
+                return dirname(__FILE__).'/../vendor/leafo/scssphp/scss.inc.php';
             default:
                 return $compiler;
         }

@@ -83,11 +83,6 @@ By default `wp-scss` will use the compiler from the [leafo/scssphp](https://gith
 
 __Note__ The `scss.php` library does not support registering custom php functions.
 
-If you would like to change the compiler, you can use the `wp_scss_compiler` filter. The returned value can be either:
-* "scssphp" (Default)
-* "scss.php"
-* Path to a file containing a class named "scssc" (see the scss.php [`scssc.inc.php`](https://github.com/oyejorge/scss.php/blob/master/scssc.inc.php) for an example of what needs to be defined).
-
 ### Example using the scss.php library
 ```php
 // wp-content/themes/your-theme/functions.php
