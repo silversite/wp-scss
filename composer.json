@@ -9,5 +9,8 @@
             "name": "kuus",
             "email": "kunderikuus@gmail.com"
         }
-    ]
+    ],
+    "config": {
+        "vendor-dir": "lib/vendor"
+    }
 }
