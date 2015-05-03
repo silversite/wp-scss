@@ -1,5 +1,5 @@
 {
-    "name": "pluswp/wp-scss",
+    "name": "PlusWP/wp-scss",
     "require": {
         "leafo/scssphp": "0.1.1"
     },
