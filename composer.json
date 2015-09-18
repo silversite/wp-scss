@@ -1,13 +1,13 @@
 {
-    "name": "pluswp/wp-scss",
+    "name": "silverwp/wp-scss",
     "require": {
-        "leafo/scssphp": "0.1.1"
+        "leafo/scssphp": "dev-master"
     },
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "kuus",
-            "email": "kunderikuus@gmail.com"
+            "name": "padalec",
+            "email": ""
         }
     ]
 }
