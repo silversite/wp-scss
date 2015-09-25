@@ -372,7 +372,7 @@ class WPScssPlugin extends WPPluginToolkitPlugin
      */
     public function addImportDir($dir)
     {
-        $this->getCompiler()->addImportDir($dir);
+        $this->getCompiler()->addImportPath($dir);
     }
 
     /**
@@ -384,6 +384,6 @@ class WPScssPlugin extends WPPluginToolkitPlugin
      */
     public function setImportDir($dirs)
     {
-        $this->getCompiler()->setImportDir($dirs);
+        $this->getCompiler()->setImportPaths($dirs);
     }
 }

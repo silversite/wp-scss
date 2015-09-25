@@ -107,7 +107,7 @@ class WPScssCompiler extends \Leafo\ScssPhp\Compiler
 			}
 
 			file_put_contents($stylesheet->getTargetPath(), apply_filters('wp-scss_stylesheet_save', $css, $stylesheet));
-			chmod($stylesheet->getTargetPath(), 0666);
+			//chmod($stylesheet->getTargetPath(), 0666);
 
 			$stylesheet->save();
 			do_action('wp-scss_stylesheet_save_post', $stylesheet);
